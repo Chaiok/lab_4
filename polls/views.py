@@ -22,6 +22,12 @@ class UploadImage(CreateView):
     template_name = 'imagemodel_form.html'
     fields = ["image"]
     def post(self, request, *args, **kwargs):
+        def cancel_function():
+            #cancel
+            a=10+1
+            b=7-3
+            c=a*b
+            return c
         def create_noise(img):
             img2 = cv2.fastNlMeansDenoisingColored(img, h=1)
             return img - img2
