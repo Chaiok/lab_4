@@ -33,23 +33,26 @@ class UploadImage(CreateView):
             diff = 15 * cv2.absdiff(img, img2)
             return diff
         def gradient(img):
-            scale = 1
-            delta = 0
-            ddepth = cv2.CV_16S
-            src = cv2.GaussianBlur(img, (3, 3), 0)
-            gray = cv2.cvtColor(src, cv2.COLOR_RGB2GRAY)
+            try:
+                scale = 1
+                delta = 0
+                ddepth = cv2.CV_16S
+                src = cv2.GaussianBlur(img, (3, 3), 0)
+                gray = cv2.cvtColor(src, cv2.COLOR_RGB2GRAY)
 
-            grad_x = cv2.Sobel(gray, ddepth, 1, 0, ksize=3, scale=scale, delta=delta, borderType=cv2.BORDER_DEFAULT)
-            grad_y = cv2.Sobel(gray, ddepth, 0, 1, ksize=3, scale=scale, delta=delta, borderType=cv2.BORDER_DEFAULT)
+                grad_x = cv2.Sobel(gray, ddepth, 1, 0, ksize=3, scale=scale, delta=delta, borderType=cv2.BORDER_DEFAULT)
+                grad_y = cv2.Sobel(gray, ddepth, 0, 1, ksize=3, scale=scale, delta=delta, borderType=cv2.BORDER_DEFAULT)
 
-            abs_grad_x = cv2.convertScaleAbs(grad_x)
-            abs_grad_y = cv2.convertScaleAbs(grad_y)
-            lum_grad =  cv2.addWeighted(abs_grad_x, 0.5, abs_grad_y, 0.5, 0)
-            temp = np.zeros_like(img)
-            temp[:,:,0] = lum_grad
-            temp[:,:,1] = lum_grad
-            temp[:,:,2] = lum_grad
-            return temp
+                abs_grad_x = cv2.convertScaleAbs(grad_x)
+                abs_grad_y = cv2.convertScaleAbs(grad_y)
+                lum_grad =  cv2.addWeighted(abs_grad_x, 0.5, abs_grad_y, 0.5, 0)
+                temp = np.zeros_like(img)
+                temp[:,:,0] = lum_grad
+                temp[:,:,1] = lum_grad
+                temp[:,:,2] = lum_grad
+                return temp
+            except Exception as e:
+                print(e)
         form = ImageUploadForm(request.POST, request.FILES)
         #если форма валидная
         if form.is_valid():
